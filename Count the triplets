@@ -1,0 +1,103 @@
+/*
+
+Given an array of distinct integers. The task is to count all the triplets such that sum of two elements equals the third element.
+
+Input:
+The first line of input contains an integer T denoting the number of test cases. Then T test cases follow. Each test case consists of two lines. First line of each test case contains an Integer N denoting size of array and the second line contains N space separated elements.
+
+Output:
+For each test case, print the count of all triplets, in new line. If no such triplets can form, print "-1".
+
+Constraints:
+1 <= T <= 100
+3 <= N <= 105
+1 <= A[i] <= 106
+
+Example:
+Input:
+2
+4
+1 5 3 2
+3
+3 2 7
+Output:
+2
+-1
+
+Explanation:
+Testcase 1: There are 2 triplets: 1 + 2 = 3 and 3 +2 = 5
+
+*/
+
+/*package whatever //do not write package name here */
+
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+class GFG {
+	public static void main (String[] args) {
+		
+		Scanner sc=new Scanner(System.in);
+		int test_cases=sc.nextInt();
+		
+		while(test_cases > 0)
+		{
+		    int size=sc.nextInt();
+		    int ar[]=new int[size];
+		    for(int i=0;i<size;i++)
+		    {
+		        ar[i]=sc.nextInt();
+		    }
+		    countTriplets(ar);
+		    test_cases--;
+		}
+	}
+	public static void countTriplets(int ar[])
+	{
+		Arrays.sort(ar);
+		int count=0;
+		HashMap<Integer,Integer> hs=new LinkedHashMap<>();
+		for(int i=0;i<ar.length;i++)
+		{
+			if(!hs.containsKey(ar[i]))
+			{
+				hs.put(ar[i],1);
+			}
+			else
+			{
+				int temp=hs.get(ar[i]);
+				temp++;
+				hs.put(ar[i],temp);
+			}
+		}
+		for(int i=0;i<ar.length-1;i++)
+		{
+			int last=ar.length-1;
+			int first=i;
+
+			if(i > 0 && ar[i] == ar[i-1])
+				continue;
+			while(first < last)
+			{
+				if(last < ar.length-1 && ar[last] == ar[last+1])
+				{
+					last--;
+					continue;
+				}
+				int sum=ar[first]+ar[last];
+
+				if(hs.containsKey(sum))
+				{
+					count+=hs.get(ar[first])*hs.get(ar[last])*hs.get(sum);
+					sum=0;
+				}
+				last--;
+			}
+		}
+		if(count > 0)
+		 System.out.println(count);
+		 else
+		 System.out.println("-1");
+	}
+}
