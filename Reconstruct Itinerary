@@ -1,0 +1,62 @@
+/*
+
+Given a list of airline tickets represented by pairs of departure and arrival airports [from, to], reconstruct the itinerary in order. All of the tickets belong to a man who departs from JFK. Thus, the itinerary must begin with JFK.
+
+Note:
+
+If there are multiple valid itineraries, you should return the itinerary that has the smallest lexical order when read as a single string. For example, the itinerary ["JFK", "LGA"] has a smaller lexical order than ["JFK", "LGB"].
+All airports are represented by three capital letters (IATA code).
+You may assume all tickets form at least one valid itinerary.
+One must use all the tickets once and only once.
+Example 1:
+
+Input: [["MUC", "LHR"], ["JFK", "MUC"], ["SFO", "SJC"], ["LHR", "SFO"]]
+Output: ["JFK", "MUC", "LHR", "SFO", "SJC"]
+Example 2:
+
+Input: [["JFK","SFO"],["JFK","ATL"],["SFO","ATL"],["ATL","JFK"],["ATL","SFO"]]
+Output: ["JFK","ATL","JFK","SFO","ATL","SFO"]
+Explanation: Another possible reconstruction is ["JFK","SFO","ATL","JFK","ATL","SFO"].
+             But it is larger in lexical order.
+
+*/
+
+class Solution {
+    public List<String> findItinerary(List<List<String>> tickets) {
+        
+        List<String> res=new ArrayList<>();
+        
+        if(tickets == null || tickets.size() == 0)
+            return res;
+        
+        Map<String,ArrayList<String>> hs=new HashMap<>();
+        
+        for(List<String> list:tickets)
+        {
+            if(!hs.containsKey(list.get(0)))
+            {
+                hs.put(list.get(0),new ArrayList<>());
+            }
+                hs.get(list.get(0)).add(list.get(1));
+        }
+        
+        for(List<String> list:hs.values())
+        {
+            Collections.sort(list);
+        }
+        Stack<String> st=new Stack<>();
+        
+        st.push("JFK");
+        
+        while(!(st.isEmpty()))
+        {
+            while((hs.containsKey(st.peek())) && (!(hs.get(st.peek()).isEmpty())))
+            {
+                st.push(hs.get(st.peek()).remove(0));
+            }
+            res.add(st.pop());
+        }
+        Collections.reverse(res);
+        return res;
+    }
+}
