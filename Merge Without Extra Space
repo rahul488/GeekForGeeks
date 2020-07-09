@@ -1,0 +1,133 @@
+/*
+
+Given two sorted arrays arr1[] and arr2[] in non-decreasing order with size n and m. The task is to merge the two sorted arrays into one sorted array (in non-decreasing order).
+
+Note: Expected time complexity is O((n+m) log(n+m)). DO NOT use extra space.  We need to modify existing arrays as following.
+
+Input: arr1[] = {10};
+       arr2[] = {2, 3};
+Output: arr1[] = {2}
+        arr2[] = {3, 10}  
+
+Input: arr1[] = {1, 5, 9, 10, 15, 20};
+       arr2[] = {2, 3, 8, 13};
+Output: arr1[] = {1, 2, 3, 5, 8, 9}
+        arr2[] = {10, 13, 15, 20} 
+Input:
+First line contains an integer T, denoting the number of test cases. First line of each test case contains two space separated integers X and Y, denoting the size of the two sorted arrays. Second line of each test case contains X space separated integers, denoting the first sorted array P. Third line of each test case contains Y space separated integers, denoting the second array Q.
+
+Output:
+For each test case, print (X + Y) space separated integer representing the merged array.
+
+Constraints:
+1 <= T <= 100
+1 <= X, Y <= 5*104
+0 <= arr1i, arr2i <= 109
+
+Example:
+Input:
+2
+4 5
+1 3 5 7
+0 2 6 8 9
+2 3
+10 12
+5 18 20
+
+Output:
+0 1 2 3 5 6 7 8 9
+5 10 12 18 20
+
+Explanation:
+Testcase 1: After merging two non-decreasing arrays, we have, 0 1 2 3 5 6 7 8 9.
+
+*/
+
+/*package whatever //do not write package name here */
+
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+class GFG {
+	public static void main (String[] args)throws IOException {
+		//code
+		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+		
+		int testCases=Integer.parseInt(br.readLine());
+		
+		while(testCases-->0){
+		   
+		   String size=br.readLine();
+		   String s[]=size.split(" ");
+		   int m=Integer.valueOf(s[0]);
+		   int n=Integer.valueOf(s[1]);
+		   int a[]=new int[m];
+		   int b[]=new int[n];
+		   
+		   String data1=br.readLine();
+		   String data2=br.readLine();
+		   int i=0,j=0;
+		   for(String num:data1.split(" ")){
+		       a[i]=Integer.parseInt(num);
+		       i++;
+		   }
+		   for(String num:data2.split(" ")){
+		       b[j]=Integer.parseInt(num);
+		       j++;
+		   }
+		   sortArray(a,b,m,n);
+		}
+	}
+	public static void sortArray(int a[],int b[],int m,int n){
+	  StringBuilder sb=new StringBuilder("");
+	  
+	  int i=0,j=0,count=0;
+	  while(count < m+n)
+	  {
+	     if(i<m && j< n)
+	     {
+	         if(a[i] < b[j])
+	         {
+	           sb.append(String.valueOf(a[i])+" ");
+	          i++;
+	         }
+	         else
+	         {
+	            sb.append(String.valueOf(b[j])+" ");
+	            j++;
+	         }
+	     }
+	     else{
+	         if(i < m)
+	         {
+	              sb.append(String.valueOf(a[i])+" ");
+	          i++;
+	         }
+	         else
+	         {
+	              sb.append(String.valueOf(b[j])+" ");
+	            j++;
+	         }
+	     }
+	     count++;
+	  }
+	  System.out.println(sb);
+	 /*** for(int i=n-1;i>=0;i--){
+	      int last=a[m-1],j;
+	      
+	      for(j=m-2;j>=0 && a[j] > b[i];j--){
+	          a[j+1]=a[j];
+	      }
+	      if(j!=m-2 || last > b[i]){
+	          a[j+1]=b[i];       //for modifying array
+	          b[i]=last;
+	      }
+	  }
+	  for(int i:a)
+	  System.out.print(i+" ");
+	  for(int i:b)
+	  System.out.print(i+" ");****/
+	  
+	}
+}
