@@ -1,0 +1,87 @@
+/*
+
+Given a 2D board and a list of words from the dictionary, find all words in the board.
+
+Each word must be constructed from letters of sequentially adjacent cell, where "adjacent" cells are those horizontally or vertically neighboring. The same letter cell may not be used more than once in a word.
+
+ 
+
+Example:
+
+Input: 
+board = [
+  ['o','a','a','n'],
+  ['e','t','a','e'],
+  ['i','h','k','r'],
+  ['i','f','l','v']
+]
+words = ["oath","pea","eat","rain"]
+
+Output: ["eat","oath"]
+ 
+
+Note:
+
+All inputs are consist of lowercase letters a-z.
+The values of words are distinct.
+
+*/
+
+class Solution {
+    List<String> res=new ArrayList<>();
+    public List<String> findWords(char[][] board, String[] words) {
+        
+       
+        
+        int row=board.length;
+        int col=board[0].length;
+        
+        Trie root=buildTrie(words);
+        
+        for(int i=0;i<row;i++){
+            for(int j=0;j<col;j++){
+                dfs(board,i,j,words,root);
+            }
+        }
+        return res;
+    }
+    public void dfs(char[][] board,int i,int j,String []words,Trie root){
+        char c=board[i][j];
+        
+        if(c == '#' || root.dict[c-'a'] == null) return ;
+        root=root.dict[c-'a'];
+        
+        if(root.word!=null){
+            res.add(root.word);
+            root.word=null;
+        }
+        board[i][j]='#';
+        
+        if(i > 0) dfs(board,i-1,j,words,root);
+        if(j > 0) dfs(board,i,j-1,words,root);
+        if(i < board.length-1) dfs(board,i+1,j,words,root);
+        if(j < board[0].length-1) dfs(board,i,j+1,words,root);
+        
+        board[i][j]=c;
+    }
+    public Trie buildTrie(String[] words){
+        
+        Trie root=new Trie();
+        
+        for(String s:words){
+            Trie temp=root;
+            for(char c:s.toCharArray()){
+                if(temp.dict[c-'a'] == null)
+                temp.dict[c-'a']=new Trie();
+                temp=temp.dict[c-'a'];
+            }
+            temp.word=s;
+        }
+        return root;
+    }
+}
+class Trie{
+    
+    Trie[] dict=new Trie[26];
+    String word;
+}
