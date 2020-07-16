@@ -1,0 +1,128 @@
+/*
+
+Two strings X and Y are similar if we can swap two letters (in different positions) of X, so that it equals Y. Also two strings X and Y are similar if they are equal.
+
+For example, "tars" and "rats" are similar (swapping at positions 0 and 2), and "rats" and "arts" are similar, but "star" is not similar to "tars", "rats", or "arts".
+
+Together, these form two connected groups by similarity: {"tars", "rats", "arts"} and {"star"}.  Notice that "tars" and "arts" are in the same group even though they are not similar.  Formally, each group is such that a word is in the group if and only if it is similar to at least one other word in the group.
+
+We are given a list A of strings.  Every string in A is an anagram of every other string in A.  How many groups are there?
+
+ 
+
+Example 1:
+
+Input: A = ["tars","rats","arts","star"]
+Output: 2
+ 
+
+Constraints:
+
+1 <= A.length <= 2000
+1 <= A[i].length <= 1000
+A.length * A[i].length <= 20000
+All words in A consist of lowercase letters only.
+All words in A have the same length and are anagrams of each other.
+The judging time limit has been increased for this question.
+
+*/
+
+****** Union Find  ******
+--------------------------
+
+class Solution {
+    public int numSimilarGroups(String[] A) {
+        
+        if(A.length == 0 || A == null) return 0;
+        
+        int[] parent=new int[A.length];
+        
+        for(int i=0;i<A.length;i++){
+            parent[i]=i;
+        }
+        
+        //Using UnionFind
+        
+        for(int i=0;i<A.length;i++){
+            for(int j=i+1;j<A.length;j++){
+                if(isSimilar(A[i],A[j])){
+                    
+                    int u=findParent(i,parent);
+                    int v=findParent(j,parent);
+                    
+                    parent[v]=u;
+                }
+            }
+        }
+        Set<Integer> set=new HashSet<>();
+        
+        for(int i=0;i<parent.length;i++)
+            set.add(findParent(i,parent));
+        return set.size();
+    }
+    public int findParent(int u,int[]parent){
+        if(parent[u]!=u)
+            parent[u]=findParent(parent[u],parent);
+        return parent[u];
+    }
+    public boolean isSimilar(String x,String y){
+        int count=0;
+        for(int i=0;i<x.length();i++){
+            if(x.charAt(i) != y.charAt(i))
+                count++;
+        }
+        return count == 2 || count == 0;
+    }
+}
+
+***** Dfs *****
+-----------------
+
+
+class Solution {
+    public int numSimilarGroups(String[] A) {
+        if(A.length == 0 || A == null)
+            return 0;
+        Set<String> set=new HashSet<>();
+        int res=0;
+        for(String s:A){
+            if(!set.contains(s)){
+                dfs(s,A,set);
+                res++;
+            }        
+        }
+        return res;
+    }
+    public void dfs(String curr,String A[],Set<String> set){
+        
+        if(set.contains(curr))
+            return ;
+        set.add(curr);
+        
+        for(int i=0;i<A.length;i++){
+            
+            if(isSimilar(curr,A[i]))
+                dfs(A[i],A,set);
+        }
+            
+    }
+    public boolean isSimilar(String x,String y){
+        int count=0;
+        
+        for(int i=0;i<x.length();i++){
+            if(x.charAt(i)!=y.charAt(i))
+                count++;
+        }
+        return count == 2 || count == 0;
+    }
+}
+
+
+
+
+
+
+
+
+
+
