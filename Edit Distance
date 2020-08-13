@@ -1,0 +1,83 @@
+/*
+
+Given two words word1 and word2, find the minimum number of operations required to convert word1 to word2.
+
+You have the following 3 operations permitted on a word:
+
+Insert a character
+Delete a character
+Replace a character
+Example 1:
+
+Input: word1 = "horse", word2 = "ros"
+Output: 3
+Explanation: 
+horse -> rorse (replace 'h' with 'r')
+rorse -> rose (remove 'r')
+rose -> ros (remove 'e')
+Example 2:
+
+Input: word1 = "intention", word2 = "execution"
+Output: 5
+Explanation: 
+intention -> inention (remove 't')
+inention -> enention (replace 'i' with 'e')
+enention -> exention (replace 'n' with 'x')
+exention -> exection (replace 'n' with 'c')
+exection -> execution (insert 'u')
+
+*/
+
+
+class Solution {
+    public int minDistance(String word1, String word2) {
+     
+        int s1=word1.length();
+        int s2=word2.length();
+        int dp[][]=new int[s1+1][s2+1];
+        
+       /*exp:-s1=abc,s2=bcd;
+              for insert:-abc->abcd(insert at right)
+                          bcd->bcd
+                      i.e;-(3,3)=(3,2)+1;=>(i,j)=(i,j-1)+1
+            (1 add bcoz for insert opeartions)
+            for remove:-abc->ab
+                        bcd->bcd
+                    i.e:-(3,3)=(2,3)+1=>(i,j)=(i-1,j)+1;
+            for replace:-abc->abd
+                         bcd->bcd
+                    i.e:-(3,3)=(2,2)+1=>(i.j)=(i-1,j-1);
+            if character is same i.e s1=abc ,s2=bcc;
+                    then (i,j)=(i-1,j-1)
+        */
+        dp[0][0]=0;
+        
+        
+         //if word2 is null then we need to perform word1.length() operations
+        
+        for(int j=1;j<=s1;j++){
+            dp[j][0]=j;
+        }
+        
+        //if word1 is null then we need to perform word2.length() operations
+        
+        for(int i=1;i<=s2;i++){
+            dp[0][i]=i;
+        }
+        
+        //for intermediate operations
+        
+        for(int i=1;i<=s1;i++){
+            for(int j=1;j<=s2;j++){
+                
+                if(word1.charAt(i-1) == word2.charAt(j-1)){
+                    dp[i][j]=dp[i-1][j-1];
+                }
+                else{
+                    dp[i][j]=1+Math.min(dp[i-1][j],Math.min(dp[i][j-1],dp[i-1][j-1]));
+                }
+            }
+        }
+        return dp[s1][s2];
+    }
+}
